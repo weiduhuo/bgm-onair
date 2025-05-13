@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BGM Anime Time Set
 // @namespace    http://tampermonkey.net/
-// @version      0.0.4
+// @version      0.0.5
 // @description  在BGM.tv的点格子页面添加设置按钮，可以设置动画的播放时间并排序
 // @author       age
 // @match        https://bgm.tv/
@@ -14,7 +14,8 @@
 (function() {
     'use strict';
 
-    // 0.0.4更新：添加排序功能选项，增加Diff更新功能
+    // 0.0.5更新：主打一个兼容能力强，在此版本，你可以对显示位置进行调整，可以选择在平铺模式和列表模式都可以显示了！
+    // 调整了添加设置按钮的方式，避免引起原界面的内容变化（比如switchTinyManager按钮莫名其妙的整体变色）；修改了图标，由emoji改成固定图片，保持显示样式的一致性和美观性。
 
     const STORAGE_KEY = 'BGM_HOME_ANIME_TIME_SET_AGE';
     const SETTINGS_KEY = 'BGM_HOME_ANIME_TIME_SETTINGS_AGE';
@@ -97,7 +98,8 @@
             showStyleRed: 0,
             showStyleGreen: 0,
             showStyleBlue: 0,
-            sortMethod: 0
+            sortMethod: 0,
+            showPlace: 0
         };
     }
 
@@ -114,6 +116,9 @@
         }
         if (typeof settings.sortMethod !== 'number' || settings.sortMethod < 0 || settings.sortMethod > 2) {
             settings.sortMethod = 0;
+        }
+        if (typeof settings.showPlace !== 'number' || settings.showPlace < 0 || settings.showPlace > 3) {
+            settings.showPlace = 0;
         }
         return settings;
     }
@@ -147,17 +152,25 @@
 
     // 添加管理按钮
     function addManagerButton() {
-        const prgManagerMode = document.getElementById('prgManagerMode');
-        if (!prgManagerMode || document.getElementById('Age-js01-manager-button')) return;
+        const prgManagerHeader = document.getElementById('prgManagerHeader');
+        if (!prgManagerHeader) return;
+
+        if (document.getElementById('Age-js01-manager-button')) return;
+
+        const newPrgManagerMode = document.createElement('ul');
+        newPrgManagerMode.id = 'prgManagerMode';
+        newPrgManagerMode.className = 'categoryTab clearit rr';
 
         const li = document.createElement('li');
         const managerButton = document.createElement('button');
         managerButton.id = 'Age-js01-manager-button';
-        managerButton.innerHTML = '<div style="text-align:center;line-height:2;">⏰︎</div>';
+        managerButton.innerHTML = '<div class="Age-js01-manager-iconclass"></div>';
         managerButton.addEventListener('click', showManagerModal);
         
         li.appendChild(managerButton);
-        prgManagerMode.appendChild(li);
+        newPrgManagerMode.appendChild(li);
+
+        prgManagerHeader.insertBefore(newPrgManagerMode, prgManagerHeader.firstChild);
     }
 
     // 显示管理框
@@ -200,7 +213,7 @@
                         <option value="12">UTC+12</option>
                     </select>
                 </div>
-                <div style="margin-top: 15px;">
+                <div style="margin-top: 10px;">
                     <h4>显示样式设置</h4>
                     <div>
                         <label for="Age-js01-show-style-red">红：</label>
@@ -232,12 +245,20 @@
                         </select>
                     </div>
                 </div>
-                <div style="margin-top: 15px;">
-                    <h4>排序设置</h4>
+                <div style="margin-top: 10px;">
+                    <h4>排序逻辑和显示范围</h4>
                     <select id="Age-js01-sort-method">
                         <option value="0">按照周日到周六的时间顺序排序</option>
                         <option value="1">将蓝红绿色放在最前面按时间排序</option>
                         <option value="2">禁用重新排序，保存原顺序</option>
+                    </select>
+                </div>
+                <div style="margin-top: 5px;">
+                    <select id="Age-js01-show-place">
+                        <option value="0">仅在平铺模式显示</option>
+                        <option value="1">在平铺模式和列表项显示</option>
+                        <option value="2">在平铺模式和列表模式显示</option>
+                        <option value="3">全部显示</option>
                     </select>
                 </div>
                 <button id="Age-js01-toggle-set">${cachedSettings.setShow ? '隐藏所有SET按钮' : '显示所有SET按钮'}</button>
@@ -256,6 +277,7 @@
         modal.querySelector('#Age-js01-show-style-green').value = cachedSettings.showStyleGreen;
         modal.querySelector('#Age-js01-show-style-blue').value = cachedSettings.showStyleBlue;
         modal.querySelector('#Age-js01-sort-method').value = cachedSettings.sortMethod;
+        modal.querySelector('#Age-js01-show-place').value = cachedSettings.showPlace || 0;
 
         document.body.appendChild(modal);
 
@@ -286,7 +308,7 @@
                     }
                     
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedData));
-                    cachedAnimeTimeData = getAnimeTimeData(); // 重新加载数据
+                    cachedAnimeTimeData = getAnimeTimeData();
                     addSetButtons();
                     sortAnimeList();
                     alert('保存成功');
@@ -300,7 +322,8 @@
                     showStyleRed: parseInt(modal.querySelector('#Age-js01-show-style-red').value),
                     showStyleGreen: parseInt(modal.querySelector('#Age-js01-show-style-green').value),
                     showStyleBlue: parseInt(modal.querySelector('#Age-js01-show-style-blue').value),
-                    sortMethod: parseInt(modal.querySelector('#Age-js01-sort-method').value)
+                    sortMethod: parseInt(modal.querySelector('#Age-js01-sort-method').value),
+                    showPlace: parseInt(modal.querySelector('#Age-js01-show-place').value)
                 };
                 setSettings(newSettings);
                 addSetButtons();
@@ -316,72 +339,72 @@
         return data ? JSON.parse(data) : {};
     }
 
-async function autoFetchSchedule() {
-    const isDiffUpdate = document.getElementById('Age-js01-diff-update')?.checked || false;
-    if (!isDiffUpdate && !confirm('此操作将清空目前的时间表，是否继续？')) return;
+    async function autoFetchSchedule() {
+        const isDiffUpdate = document.getElementById('Age-js01-diff-update')?.checked || false;
+        if (!isDiffUpdate && !confirm('此操作将清空目前的时间表，是否继续？')) return;
 
-    try {
-        const subjectLinks = document.querySelectorAll('#cloumnSubjectInfo .infoWrapper_tv.hidden.clearit a[href^="/subject/"]');
-        const subjectIds = new Set();
-        subjectLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            const match = href.match(/^\/subject\/(\d+)/);
-            if (match && match[1]) subjectIds.add(match[1]);
-        });
+        try {
+            const subjectLinks = document.querySelectorAll('#cloumnSubjectInfo .infoWrapper_tv.hidden.clearit a[href^="/subject/"]');
+            const subjectIds = new Set();
+            subjectLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const match = href.match(/^\/subject\/(\d+)/);
+                if (match && match[1]) subjectIds.add(match[1]);
+            });
 
-        if (subjectIds.size === 0) {
-            alert('未找到任何动画条目ID');
-            return;
-        }
-
-        const response = await fetch('https://raw.githubusercontent.com/zhollgit/bgm-onair/main/onair.json');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-        const data = await response.json();
-        const newAnimeTimeData = isDiffUpdate ? getFullStorageData() : {};
-        const timezoneOffset = parseInt(document.getElementById('Age-js01-timezone-select')?.value || 8);
-        const now = new Date();
-
-        data.items.forEach(item => {
-            const bangumiSite = item.sites.find(site => site.site === 'bangumi');
-            if (bangumiSite?.id && subjectIds.has(bangumiSite.id) && item.begin) {
-                if (isDiffUpdate && newAnimeTimeData[bangumiSite.id]) return;
-
-                const beginDate = new Date(item.begin);
-                let adjustedHours = beginDate.getUTCHours() + timezoneOffset;
-                let adjustedDay = beginDate.getUTCDay();
-
-                // 处理跨天情况
-                if (adjustedHours >= 24) {
-                    adjustedHours -= 24;
-                    adjustedDay = (adjustedDay + 1) % 7;
-                } else if (adjustedHours < 0) {
-                    adjustedHours += 24;
-                    adjustedDay = (adjustedDay - 1 + 7) % 7;
-                }
-
-                const adjustedDate = new Date(beginDate);
-                adjustedDate.setUTCHours(adjustedHours, beginDate.getUTCMinutes(), 0, 0);
-
-                const time = `${adjustedHours.toString().padStart(2, '0')}:${beginDate.getUTCMinutes().toString().padStart(2, '0')}`;
-                newAnimeTimeData[bangumiSite.id] = { 
-                    weekDay: adjustedDay, 
-                    time,
-                    expiresAt: new Date(now.getTime() + (EXPIRATION_DAYS || 7) * 24 * 60 * 60 * 1000).toISOString()
-                };
+            if (subjectIds.size === 0) {
+                alert('未找到任何动画条目ID');
+                return;
             }
-        });
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newAnimeTimeData));
-        cachedAnimeTimeData = getAnimeTimeData();
-        addSetButtons();
-        sortAnimeList();
+            const response = await fetch('https://raw.githubusercontent.com/zhollgit/bgm-onair/main/onair.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-        const storageContent = document.getElementById('Age-js01-storage-content');
-        if (storageContent) storageContent.textContent = JSON.stringify(newAnimeTimeData, null, 2);
+            const data = await response.json();
+            const newAnimeTimeData = isDiffUpdate ? getFullStorageData() : {};
+            const timezoneOffset = parseInt(document.getElementById('Age-js01-timezone-select')?.value || 8);
+            const now = new Date();
 
-        alert(`成功获取 ${Object.keys(newAnimeTimeData).length} 个动画的时间数据`);
-    } catch (error) {
+            data.items.forEach(item => {
+                const bangumiSite = item.sites.find(site => site.site === 'bangumi');
+                if (bangumiSite?.id && subjectIds.has(bangumiSite.id) && item.begin) {
+                    if (isDiffUpdate && newAnimeTimeData[bangumiSite.id]) return;
+
+                    const beginDate = new Date(item.begin);
+                    let adjustedHours = beginDate.getUTCHours() + timezoneOffset;
+                    let adjustedDay = beginDate.getUTCDay();
+
+                    // 处理跨天情况
+                    if (adjustedHours >= 24) {
+                        adjustedHours -= 24;
+                        adjustedDay = (adjustedDay + 1) % 7;
+                    } else if (adjustedHours < 0) {
+                        adjustedHours += 24;
+                        adjustedDay = (adjustedDay - 1 + 7) % 7;
+                    }
+
+                    const adjustedDate = new Date(beginDate);
+                    adjustedDate.setUTCHours(adjustedHours, beginDate.getUTCMinutes(), 0, 0);
+
+                    const time = `${adjustedHours.toString().padStart(2, '0')}:${beginDate.getUTCMinutes().toString().padStart(2, '0')}`;
+                    newAnimeTimeData[bangumiSite.id] = { 
+                        weekDay: adjustedDay, 
+                        time,
+                        expiresAt: new Date(now.getTime() + (EXPIRATION_DAYS || 7) * 24 * 60 * 60 * 1000).toISOString()
+                    };
+                }
+            });
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(newAnimeTimeData));
+            cachedAnimeTimeData = getAnimeTimeData();
+            addSetButtons();
+            sortAnimeList();
+
+            const storageContent = document.getElementById('Age-js01-storage-content');
+            if (storageContent) storageContent.textContent = JSON.stringify(newAnimeTimeData, null, 2);
+
+            alert(`成功获取 ${Object.keys(newAnimeTimeData).length} 个动画的时间数据`);
+        } catch (error) {
             if ((error instanceof TypeError) || (error.message.includes("Failed"))) {
                 alert("返回内容失败，请检查能否连接Github："+ error.message);
             } 
@@ -393,7 +416,7 @@ async function autoFetchSchedule() {
             }
             console.error(error);
         }
-}
+    }
 
     // 切换SET按钮的显示/隐藏
     function toggleSetButtons(show) {
@@ -407,8 +430,9 @@ async function autoFetchSchedule() {
 
     // 添加设置按钮
     function addSetButtons() {
+        const showPlace = cachedSettings.showPlace || 0;
+        
         const editLinks = cachedContainer.querySelectorAll('a.thickbox.l[id^="sbj_prg_"]:not([data-processed])');
-
         editLinks.forEach(editLink => {
             if (editLink.textContent.trim() === '[edit]') return;
 
@@ -431,6 +455,59 @@ async function autoFetchSchedule() {
             setButton.addEventListener('click', () => showTimeSettingDialog(subjectId, setButton));
             editLink.parentNode.insertBefore(setButton, editLink.nextSibling);
         });
+        
+        if (showPlace === 1 || showPlace === 3) {
+            const editLinks = document.querySelectorAll('a.thickbox.l[id^="sbj_prg_"][title^="修改"]:not([data-processed-edit])');
+            editLinks.forEach(editLink => {
+                if (editLink.textContent.trim() !== '[edit]') return;
+                
+                const subjectId = editLink.id.split('_')[2];
+                editLink.setAttribute('data-processed-edit', 'true');
+                
+                const setButton = document.createElement('button');
+                setButton.id = 'Age-js01-button';
+                setButton.setAttribute('data-subject-id', subjectId);
+                
+                if (cachedAnimeTimeData[subjectId]) {
+                    setButton.textContent = formatTimeData(cachedAnimeTimeData[subjectId]);
+                    const timeStatus = getTimeStatus(cachedAnimeTimeData[subjectId]);
+                    if (timeStatus) setButton.classList.add(timeStatus);
+                } else {
+                    setButton.textContent = 'SET';
+                    if (!cachedSettings.setShow) setButton.style.display = 'none';
+                }
+                
+                setButton.addEventListener('click', () => showTimeSettingDialog(subjectId, setButton));
+                editLink.parentNode.insertBefore(setButton, editLink.nextSibling);
+            });
+        }
+        
+        if (showPlace === 2 || showPlace === 3) {
+            const titleLinks = document.querySelectorAll('a.subjectItem.title.textTip:not([data-processed-title])');
+            titleLinks.forEach(titleLink => {
+                const subjectId = titleLink.getAttribute('data-subject-id');
+                if (!subjectId) return;
+                
+                titleLink.setAttribute('data-processed-title', 'true');
+                
+                const setButton = document.createElement('button');
+                setButton.id = 'Age-js01-button';
+                setButton.setAttribute('data-subject-id', subjectId);
+                setButton.style.marginRight = '5px';
+                
+                if (cachedAnimeTimeData[subjectId]) {
+                    setButton.textContent = formatTimeData(cachedAnimeTimeData[subjectId]);
+                    const timeStatus = getTimeStatus(cachedAnimeTimeData[subjectId]);
+                    if (timeStatus) setButton.classList.add(timeStatus);
+                } else {
+                    setButton.textContent = 'SET';
+                    if (!cachedSettings.setShow) setButton.style.display = 'none';
+                }
+                
+                setButton.addEventListener('click', () => showTimeSettingDialog(subjectId, setButton));
+                titleLink.parentNode.insertBefore(setButton, titleLink);
+            });
+        }
     }
 
     // 获取时间状态
@@ -566,102 +643,102 @@ async function autoFetchSchedule() {
         return `${WEEK_DAYS[timeData.weekDay]} ${timeData.time}`;
     }
 
-// 排序
-function sortAnimeList() {
-    const wrapper = cachedContainer.querySelector('.infoWrapperContainer.infoWrapper_tv.hidden.clearit');
-    if (!wrapper) return;
+    // 排序
+    function sortAnimeList() {
+        const wrapper = cachedContainer.querySelector('.infoWrapperContainer.infoWrapper_tv.hidden.clearit');
+        if (!wrapper) return;
 
-    // 如果排序方法为2（禁用排序），则直接返回
-    if (cachedSettings.sortMethod === 2) return;
+        // 如果排序方法为2（禁用排序），则直接返回
+        if (cachedSettings.sortMethod === 2) return;
 
-    const animeItems = Array.from(wrapper.querySelectorAll('.clearit.infoWrapper'));
+        const animeItems = Array.from(wrapper.querySelectorAll('.clearit.infoWrapper'));
 
-    const originalOrderMap = new Map();
-    animeItems.forEach((item, index) => {
-        originalOrderMap.set(item.id, index);
-    });
-
-    if (cachedSettings.sortMethod === 1) {
-        const coloredItems = [];
-        const uncoloredItems = [];
-        
-        animeItems.forEach(item => {
-            const itemId = item.id.split('_')[1];
-            const itemData = cachedAnimeTimeData[itemId];
-            const status = itemData ? getTimeStatus(itemData) : '';
-            
-            if (status) {
-                coloredItems.push(item);
-            } else {
-                uncoloredItems.push(item);
-            }
+        const originalOrderMap = new Map();
+        animeItems.forEach((item, index) => {
+            originalOrderMap.set(item.id, index);
         });
 
-        // 有颜色的条目按时间排序
-        coloredItems.sort((a, b) => {
+        if (cachedSettings.sortMethod === 1) {
+            const coloredItems = [];
+            const uncoloredItems = [];
+
+            animeItems.forEach(item => {
+                const itemId = item.id.split('_')[1];
+                const itemData = cachedAnimeTimeData[itemId];
+                const status = itemData ? getTimeStatus(itemData) : '';
+
+                if (status) {
+                    coloredItems.push(item);
+                } else {
+                    uncoloredItems.push(item);
+                }
+            });
+
+            // 有颜色的条目按时间排序
+            coloredItems.sort((a, b) => {
+                const aId = a.id.split('_')[1];
+                const bId = b.id.split('_')[1];
+                const aData = cachedAnimeTimeData[aId];
+                const bData = cachedAnimeTimeData[bId];
+
+                if (!aData && !bData) return 0;
+                if (!aData) return 1;
+                if (!bData) return -1;
+
+                // 获取当前日期
+                const now = new Date();
+                const today = now.getDay(); // 0是周日，6是周六
+
+                // 调整周日和周六的顺序
+                let aDay = aData.weekDay;
+                let bDay = bData.weekDay;
+
+                // 如果今天是周六，将周日视为7
+                if (today === 6) {
+                    if (aDay === 0) aDay = 7;
+                    if (bDay === 0) bDay = 7;
+                }
+                // 如果今天是周日，将周六视为-1
+                else if (today === 0) {
+                    if (aDay === 6) aDay = -1;
+                    if (bDay === 6) bDay = -1;
+                }
+
+                if (aDay !== bDay) return aDay - bDay;
+                return aData.time.localeCompare(bData.time);
+            });
+
+            // 无颜色的条目保持原始顺序
+            uncoloredItems.sort((a, b) => {
+                return originalOrderMap.get(a.id) - originalOrderMap.get(b.id);
+            });
+
+            // 合并数组
+            const sortedItems = [...coloredItems, ...uncoloredItems];
+            const fragment = document.createDocumentFragment();
+            sortedItems.forEach(item => fragment.appendChild(item));
+            wrapper.appendChild(fragment);
+            return;
+        }
+
+        // 默认排序
+        animeItems.sort((a, b) => {
             const aId = a.id.split('_')[1];
             const bId = b.id.split('_')[1];
             const aData = cachedAnimeTimeData[aId];
             const bData = cachedAnimeTimeData[bId];
-            
+
             if (!aData && !bData) return 0;
             if (!aData) return 1;
             if (!bData) return -1;
-            
-            // 获取当前日期
-            const now = new Date();
-            const today = now.getDay(); // 0是周日，6是周六
-            
-            // 调整周日和周六的顺序
-            let aDay = aData.weekDay;
-            let bDay = bData.weekDay;
-            
-            // 如果今天是周六，将周日视为7
-            if (today === 6) {
-                if (aDay === 0) aDay = 7;
-                if (bDay === 0) bDay = 7;
-            }
-            // 如果今天是周日，将周六视为-1
-            else if (today === 0) {
-                if (aDay === 6) aDay = -1;
-                if (bDay === 6) bDay = -1;
-            }
-            
-            if (aDay !== bDay) return aDay - bDay;
+            if (aData.weekDay !== bData.weekDay) return aData.weekDay - bData.weekDay;
             return aData.time.localeCompare(bData.time);
         });
 
-        // 无颜色的条目保持原始顺序
-        uncoloredItems.sort((a, b) => {
-            return originalOrderMap.get(a.id) - originalOrderMap.get(b.id);
-        });
-
-        // 合并数组
-        const sortedItems = [...coloredItems, ...uncoloredItems];
         const fragment = document.createDocumentFragment();
-        sortedItems.forEach(item => fragment.appendChild(item));
+        animeItems.forEach(item => fragment.appendChild(item));
         wrapper.appendChild(fragment);
-        return;
     }
-
-    // 默认排序
-    animeItems.sort((a, b) => {
-        const aId = a.id.split('_')[1];
-        const bId = b.id.split('_')[1];
-        const aData = cachedAnimeTimeData[aId];
-        const bData = cachedAnimeTimeData[bId];
-
-        if (!aData && !bData) return 0;
-        if (!aData) return 1;
-        if (!bData) return -1;
-        if (aData.weekDay !== bData.weekDay) return aData.weekDay - bData.weekDay;
-        return aData.time.localeCompare(bData.time);
-    });
-
-    const fragment = document.createDocumentFragment();
-    animeItems.forEach(item => fragment.appendChild(item));
-    wrapper.appendChild(fragment);
-}
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
