@@ -17,7 +17,14 @@
           "begin": "1969-10-04T16:00:00.000Z",
           "broadcast": "R/1969-10-05T09:30:00.000Z/P7D"
         },
-        { "site": "mikan", "id": "1327" }
+        { "site": "mikan", "id": "1327" },
+        {
+          "site": "unext",
+          "id": "SID0187914",
+          "begin": "2025-05-01T03:00:00.000Z",
+          "broadcast": "R/2025-05-01T03:00:00.000Z/P7D",
+          "comment": "1960～70年代: SID0187913"
+        }
       ],
       "id": "bf1639bb3e5973bec9bd35819b563203",
       "pinyinTitles": ["hailuoxiaojie", "hlxj"]
@@ -496,7 +503,7 @@
     {
       "title": "ちいかわ",
       "titleTranslate": {
-        "zh-Hans": ["小可爱", "Chiikawa"],
+        "zh-Hans": ["小可爱", "Chiikawa", "吉伊卡哇"],
         "zh-Hant": ["吉伊卡哇", "Chiikawa"]
       },
       "type": "tv",
@@ -508,6 +515,7 @@
       "sites": [
         { "site": "abema", "id": "19-181", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "354700" },
+        { "site": "bilibili", "id": "25417818", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "26310",
@@ -530,7 +538,14 @@
         }
       ],
       "id": "777b4b3e5908ce0da54e7bf898f7477a",
-      "pinyinTitles": ["xiaokeai", "xka", "Chiikawa", "Chiikawa"]
+      "pinyinTitles": [
+        "xiaokeai",
+        "xka",
+        "Chiikawa",
+        "Chiikawa",
+        "jiyikawa",
+        "jykw"
+      ]
     },
     {
       "title": "ポケットモンスター(2023)",
@@ -547,6 +562,7 @@
       "sites": [
         { "site": "abema", "id": "2-14", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "411247" },
+        { "site": "bilibili", "id": "25646980", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "26333",
@@ -599,6 +615,12 @@
           "id": "27389",
           "begin": "2024-10-11T10:00:00.000Z",
           "broadcast": "R/2024-10-11T10:00:00.000Z/P7D"
+        },
+        {
+          "site": "disneyplus",
+          "id": "6vbRXb2U8w7R",
+          "begin": "",
+          "broadcast": ""
         },
         { "site": "gamer", "id": "135648", "begin": "", "broadcast": "" },
         { "site": "mikan", "id": "3171" },
@@ -1460,6 +1482,7 @@
         { "site": "abema", "id": "25-283", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "501702" },
         { "site": "bangumi_moe", "id": "67ed5cbe8b961748467f45ef" },
+        { "site": "bilibili", "id": "25578027", "begin": "", "broadcast": "" },
         {
           "site": "crunchyroll",
           "id": "GMEHME72W",
@@ -1632,6 +1655,7 @@
         { "site": "abema", "id": "174-20", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "364844" },
         { "site": "bangumi_moe", "id": "67ed5cc88b961748467f4625" },
+        { "site": "bilibili", "id": "25550196", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27741",
@@ -1717,6 +1741,7 @@
         { "site": "abema", "id": "593-12", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "506672" },
         { "site": "bangumi_moe", "id": "67ed5cb88b961748467f45cd" },
+        { "site": "bilibili", "id": "25546984", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27788",
@@ -1803,6 +1828,7 @@
         },
         { "site": "bangumi", "id": "511207" },
         { "site": "bangumi_moe", "id": "67ed5cb98b961748467f45d1" },
+        { "site": "bilibili", "id": "25509561", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27883",
@@ -1951,6 +1977,7 @@
       "sites": [
         { "site": "bangumi", "id": "506258" },
         { "site": "bangumi_moe", "id": "67ed5cc98b961748467f462d" },
+        { "site": "bilibili", "id": "25551335", "begin": "", "broadcast": "" },
         { "site": "mikan", "id": "3591" },
         { "site": "prime", "id": "B0D8Z98TZZ", "begin": "", "broadcast": "" }
       ],
@@ -2065,6 +2092,7 @@
         },
         { "site": "bangumi", "id": "484402" },
         { "site": "bangumi_moe", "id": "67ed5cc38b961748467f4609" },
+        { "site": "bilibili", "id": "25551648", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27740",
@@ -2381,6 +2409,7 @@
       "sites": [
         { "site": "abema", "id": "13-199", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "363957" },
+        { "site": "bilibili", "id": "25572685", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27881",
@@ -2440,6 +2469,7 @@
         { "site": "abema", "id": "218-780", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "509986" },
         { "site": "bangumi_moe", "id": "67ed5cbf8b961748467f45f5" },
+        { "site": "bilibili", "id": "25467691", "begin": "", "broadcast": "" },
         {
           "site": "crunchyroll",
           "id": "GXJHM3G58",
@@ -2714,6 +2744,7 @@
         { "site": "abema", "id": "512-12", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "509297" },
         { "site": "bangumi_moe", "id": "67ed5cb88b961748467f45cb" },
+        { "site": "bilibili", "id": "25581526", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27862",
@@ -2807,6 +2838,7 @@
         },
         { "site": "bangumi", "id": "504678" },
         { "site": "bangumi_moe", "id": "67ed5cc38b961748467f460b" },
+        { "site": "bilibili", "id": "25577961", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27884",
@@ -3086,6 +3118,7 @@
       "sites": [
         { "site": "bangumi", "id": "382126" },
         { "site": "bangumi_moe", "id": "67ed5cc68b961748467f461d" },
+        { "site": "bilibili", "id": "25558083", "begin": "", "broadcast": "" },
         {
           "site": "gamer",
           "id": "124471",
@@ -3144,6 +3177,7 @@
         { "site": "abema", "id": "593-1", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "506922" },
         { "site": "bangumi_moe", "id": "67ed5cbd8b961748467f45e3" },
+        { "site": "bilibili", "id": "25530455", "begin": "", "broadcast": "" },
         {
           "site": "bilibili_hk_mo_tw",
           "id": "25844927",
@@ -3164,6 +3198,7 @@
         },
         { "site": "mikan", "id": "3612" },
         { "site": "nicovideo", "id": "aharen2", "begin": "", "broadcast": "" },
+        { "site": "prime", "id": "B0DZ31KQ64", "begin": "", "broadcast": "" },
         {
           "site": "unext",
           "id": "SID0180795",
@@ -3336,11 +3371,18 @@
         { "site": "abema", "id": "19-254", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "520559" },
         { "site": "bangumi_moe", "id": "67ed5cc08b961748467f45fd" },
+        { "site": "bilibili", "id": "25589743", "begin": "", "broadcast": "" },
         {
           "site": "bilibili_hk_mo_tw",
           "id": "25589985",
           "begin": "",
           "broadcast": ""
+        },
+        {
+          "site": "crunchyroll",
+          "id": "G24H1NWKE",
+          "begin": "2025-04-02T14:30:00.000Z",
+          "broadcast": "R/2025-04-02T14:30:00.000Z/P7D"
         },
         {
           "site": "danime",
@@ -3641,6 +3683,7 @@
         { "site": "abema", "id": "675-6", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "445826" },
         { "site": "bangumi_moe", "id": "67ed5cc18b961748467f45ff" },
+        { "site": "bilibili", "id": "25579052", "begin": "", "broadcast": "" },
         {
           "site": "bilibili_hk_mo_tw",
           "id": "25579102",
@@ -3713,6 +3756,13 @@
           "id": "makinasan-anime",
           "begin": "",
           "broadcast": ""
+        },
+        {
+          "site": "prime",
+          "id": "B0DVPJLQTG",
+          "begin": "",
+          "broadcast": "",
+          "comment": "かくしてる版"
         },
         {
           "site": "unext",
@@ -3980,6 +4030,7 @@
         { "site": "abema", "id": "420-71", "begin": "", "broadcast": "" },
         { "site": "bangumi", "id": "526567" },
         { "site": "bangumi_moe", "id": "67ed5cc88b961748467f4627" },
+        { "site": "bilibili", "id": "25578108", "begin": "", "broadcast": "" },
         {
           "site": "danime",
           "id": "27791",
@@ -4155,6 +4206,7 @@
           "begin": "",
           "broadcast": ""
         },
+        { "site": "prime", "id": "B0DV92C6BQ", "begin": "", "broadcast": "" },
         {
           "site": "unext",
           "id": "SID0181252",
@@ -4226,6 +4278,7 @@
           "begin": "",
           "broadcast": ""
         },
+        { "site": "prime", "id": "B0DWZ6KHWC", "begin": "", "broadcast": "" },
         {
           "site": "tropics",
           "id": "PLoGVqODys23AqztCeI-P9hmQbWg-rGDZu",
@@ -4407,6 +4460,7 @@
           "broadcast": "R/2025-04-08T13:00:00.000Z/P7D"
         },
         { "site": "mikan", "id": "3638" },
+        { "site": "prime", "id": "B0F1ZQ4C76", "begin": "", "broadcast": "" },
         {
           "site": "unext",
           "id": "SID0180652",
@@ -4422,7 +4476,7 @@
     },
     {
       "title": "TO BE HERO X",
-      "titleTranslate": {},
+      "titleTranslate": { "zh-Hans": ["凸变英雄X"] },
       "type": "web",
       "lang": "ja",
       "officialSite": "https://tbhx.net/",
@@ -4450,7 +4504,8 @@
           "broadcast": "R/2025-04-09T03:00:00.000Z/P7D"
         }
       ],
-      "id": "a38eeb291654527897b46ef3bbfbc975"
+      "id": "a38eeb291654527897b46ef3bbfbc975",
+      "pinyinTitles": ["tubianyingxiongX", "tbyxX"]
     },
     {
       "title": "WIND BREAKER Season 2",
@@ -4601,6 +4656,7 @@
       "sites": [
         { "site": "bangumi", "id": "501919" },
         { "site": "bangumi_moe", "id": "67ed5cba8b961748467f45d5" },
+        { "site": "bilibili", "id": "25581765", "begin": "", "broadcast": "" },
         {
           "site": "disneyplus",
           "id": "2VX5fKgeiVEl",
@@ -4726,6 +4782,7 @@
           "broadcast": "R/2025-04-05T16:00:00.000Z/P7D"
         },
         { "site": "mikan", "id": "3642" },
+        { "site": "prime", "id": "B0DLLHYWZK", "begin": "", "broadcast": "" },
         {
           "site": "unext",
           "id": "SID0181272",
@@ -4784,6 +4841,7 @@
           "begin": "2025-04-10T17:00:00.000Z",
           "broadcast": "R/2025-04-10T17:00:00.000Z/P7D"
         },
+        { "site": "prime", "id": "B0DWKQB8WS", "begin": "", "broadcast": "" },
         {
           "site": "unext",
           "id": "SID0181253",
@@ -4943,13 +5001,31 @@
           "id": "143292",
           "begin": "2025-04-20T11:30:00.000Z",
           "broadcast": "R/2025-04-20T11:30:00.000Z/P7D"
-        }
+        },
+        { "site": "mikan", "id": "3647" }
       ],
       "id": "ffc15062239b4a8518f9808daec7f412",
       "pinyinTitles": [
         "suiranwoshibaitunguizu，danyinweiwoyouqianshidejiyi，suoyiwozaiyangyuruoxiaodedidi",
         "srwsbtgz，dywwyqsdjy，sywzyyrxddd"
       ]
+    },
+    {
+      "title": "げっかん！なんものアニメ",
+      "titleTranslate": { "zh-Hans": ["月刊！朗萌动画"] },
+      "type": "web",
+      "lang": "ja",
+      "officialSite": "",
+      "begin": "2025-04-29T16:00:00.000Z",
+      "broadcast": "R/2025-04-29T16:00:00.000Z/P1M",
+      "end": "",
+      "comment": "",
+      "sites": [
+        { "site": "abema", "id": "740-1", "begin": "", "broadcast": "" },
+        { "site": "bangumi", "id": "547832" }
+      ],
+      "id": "304888fe5b254b56347428d140e957b9",
+      "pinyinTitles": ["yuekan！langmengdonghua", "yk！lmdh"]
     }
   ]
 }
